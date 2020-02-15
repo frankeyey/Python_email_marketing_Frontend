@@ -1,0 +1,80 @@
+.container {
+    display: grid;
+    grid-template-areas:
+      "subject output"
+      "content output"
+      "var output"
+      "upload send";
+    grid-template-columns: 50% 50%;
+    width: 80%;
+    padding-top: 20px;
+  }
+  .email_content {
+    grid-area: content;
+    margin-top: 10px;
+    margin-right: 20px;
+  }
+  
+  .var_from_csv {
+    grid-area: var;
+  }
+  
+  .upload_csv {
+    grid-area: upload;
+  }
+  
+  .sample_output {
+    grid-area: output;
+  }
+  
+  .email_subject {
+    grid-area: subject;
+    margin-right: 20px;
+  }
+  
+  .send_button {
+    grid-area: send;
+    padding: 0;
+  }
+  
+  .see_output_btn {
+    float: right;
+  }
+  
+  .see_output_btn input, input[type="button"]{
+    background-color: rgb(76, 102, 175);
+    color: white;
+    padding: 6px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+  }
+  
+  .see_output_btn input:hover,input[type="button"]:hover {
+    background-color: rgb(143, 148, 218);
+  }
+  
+  input[type="button"] {
+    margin-top: 10px;
+    margin-right: 10px;
+    padding: 4px 15px;
+  }
+  
+  textarea {
+    height: 350px;
+  }
+  
+  .upload_csv label {
+    font-size: 13px;
+  }
+  
+  .output_content {
+    font-size: 13px;
+    background-color: white;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    display: none;
+  }
+  
