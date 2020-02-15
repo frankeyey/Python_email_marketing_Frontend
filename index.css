@@ -1,11 +1,11 @@
 :root {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
   display: flex;
   flex-direction: column;
-  align-content: center;    
+  align-content: center;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
@@ -28,7 +28,10 @@ label {
   display: inline-block;
 }
 
-input[type=email], input[type=password], input[type=text], textarea{
+input[type="email"],
+input[type="password"],
+input[type="text"],
+textarea {
   width: 100%;
   padding: 12px;
   border: 1px solid #ccc;
@@ -38,7 +41,7 @@ input[type=email], input[type=password], input[type=text], textarea{
   font-size: 14px;
 }
 
-input[type=submit] {
+input[type="submit"] {
   background-color: rgb(76, 102, 175);
   color: white;
   padding: 12px;
@@ -49,7 +52,7 @@ input[type=submit] {
   font-size: 15px;
 }
 
-input[type=submit]:hover {
+input[type="submit"]:hover {
   background-color: rgb(20, 228, 103);
 }
 
@@ -72,6 +75,67 @@ a:hover {
   color: rgb(20, 228, 103);
 }
 
+/* email_content.html */
+.container {
+  display: grid;
+  grid-template-areas:
+    "content output"
+    "var subject"
+    "upload send";
+  grid-template-columns: 50% 50%;
+  width: 80%;
+}
+.email_content {
+  grid-area: content;
+  margin-right: 20px;
+}
+
+.var_from_csv {
+  grid-area: var;
+}
+
+.upload_csv {
+  grid-area: upload;
+}
+
+.sample_output {
+  grid-area: output;
+}
+
+.email_subject {
+  grid-area: subject;
+}
+
+.send_button {
+  grid-area: send;
+}
+
+.see_output_btn {
+  float: right;
+}
+
+button {
+  background-color: rgb(76, 102, 175);
+  color: white;
+  padding: 6px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+button:hover {
+  background-color: rgb(143, 148, 218);
+}
+
 textarea {
-  height: 300px;
+  height: 350px;
+}
+
+.upload_csv label {
+  font-size: 13px;
+}
+
+#output_content p {
+  white-space: pre-wrap;
 }
