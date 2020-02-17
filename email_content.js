@@ -1,3 +1,9 @@
+let csvHeader= []
+let csvData = []
+let csvFormatedHeader = []
+let imgUrl = []
+let imgFormatedUrl = []
+
 function uploadDealcsv() {}
 /* Method for read uploded csv file */
 uploadDealcsv.prototype.getCsv = function(e) {
@@ -16,10 +22,6 @@ uploadDealcsv.prototype.getCsv = function(e) {
     }
   });
 };
-
-let csvHeader= []
-let csvData = []
-let csvFormatedHeader = []
 
 /* Method for parse csv data and create button */
 uploadDealcsv.prototype.getParsecsvdata = function(data) {
@@ -52,8 +54,30 @@ uploadDealcsv.prototype.getParsecsvdata = function(data) {
   return csvData, csvHeader, csvFormatedHeader
 };
 
+/* Method to create Image button */
+document.getElementById("my-image").addEventListener('change', function() {
+  if (this.files && this.files[0]) {
+      imgUrl.push(URL.createObjectURL(this.files[0])); // set src to blob url
+      let button = document.createElement('input')
+      let imgName = this.files[0].name
+      let formatedImageTag= "${[" + imgName + "]}"
+
+      imgFormatedUrl.push(formatedImageTag)
+      button.type = "button"
+      button.id = imgName
+      button.value = imgName
+      button.onclick = function() {
+        document.getElementById("input_content").value += formatedImageTag
+        getBackToInput()
+      }
+      document.getElementById("varFromCsv").append(button)
+  }
+  return imgUrl, imgFormatedUrl
+});
+
 /* Method to see the sample output */
 function seeOutput() {
+  console.log(imgFormatedUrl)
   let output = document.getElementById("output_content")
   let input = document.getElementById("input_content").value.split("\n").join("<br>");
   output.style.display = "block"
@@ -63,8 +87,14 @@ function seeOutput() {
     var changeVariable = input.split(csvFormatedHeader[i]).join(csvData[i])
     input = changeVariable
   }
-
-  if (searchString) {
+  
+  for (let i = 0; i < imgFormatedUrl.length; i++) {  //Replace each ${} with respective sample data
+    var searchImage = input.search(imgFormatedUrl[i])   //Check if any ${} exist
+    var changeVariable = input.split(imgFormatedUrl[i]).join("<img src=" + imgUrl[i] + " style='max-width: 100%'>")
+    input = changeVariable
+  }
+  
+  if (searchString || searchImage) {
     output.innerHTML = changeVariable
   } else {
     output.innerHTML = input
