@@ -11,7 +11,7 @@
     <div>
       <h1>Create your E-mail Template</h1>
     </div>
-    <form class="card container" action="/" method="POST">
+    <form enctype="multipart/form-data"  class="card container" action="/sendEmails" method="POST">
       <div class="email_subject">
         <label for="email_subject">E-mail Subject:</label>
         <input type="text" name="subject_field" />
@@ -29,7 +29,7 @@
         </div>
         <div class="upload_image">
           <label>image:</label>
-          <input type="file" id="my-image">
+          <input name="media" multiple type="file" id="my-image">
           <img>
         </div>
     </div>
