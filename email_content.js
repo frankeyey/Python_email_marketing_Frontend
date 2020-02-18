@@ -56,10 +56,11 @@ uploadDealcsv.prototype.getParsecsvdata = function(data) {
 
 /* Method to create Image button */
 document.getElementById("my-image").addEventListener('change', function() {
-  if (this.files && this.files[0]) {
-      imgUrl.push(URL.createObjectURL(this.files[0])); // set src to blob url
+  for (let i = 0; i < this.files.length; i++) {
+    if (this.files && this.files[i]) {
+      imgUrl.push(URL.createObjectURL(this.files[i])); // set src to blob url
       let button = document.createElement('input')
-      let imgName = this.files[0].name
+      let imgName = this.files[i].name
       let formatedImageTag= "${[" + imgName + "]}"
 
       imgFormatedUrl.push(formatedImageTag)
@@ -71,13 +72,14 @@ document.getElementById("my-image").addEventListener('change', function() {
         getBackToInput()
       }
       document.getElementById("varFromCsv").append(button)
+    }
   }
+  
   return imgUrl, imgFormatedUrl
 });
 
 /* Method to see the sample output */
 function seeOutput() {
-  console.log(imgFormatedUrl)
   let output = document.getElementById("output_content")
   let input = document.getElementById("input_content").value.split("\n").join("<br>");
   output.style.display = "block"
@@ -108,3 +110,18 @@ function getBackToInput() {
 
 var parseCsv = new uploadDealcsv();
 parseCsv.getCsv();
+
+function insertAtCursor(input, textToInsert) {
+  // get current text of the input
+  const value = input.value;
+
+  // save selection start and end position
+  const start = input.selectionStart;
+  const end = input.selectionEnd;
+
+  // update the value with our text inserted
+  input.value = value.slice(0, start) + textToInsert + value.slice(end);
+
+  // update cursor to be at the end of insertion
+  input.selectionStart = input.selectionEnd = start + textToInsert.length;
+}

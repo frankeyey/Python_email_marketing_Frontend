@@ -32,13 +32,18 @@
           <input name="media" multiple type="file" id="my-image">
           <img>
         </div>
+        <div>
+            <label class="attachment_upload">attachemnt:</label>
+            <input name="attachment" accept=".zip" type="file" id="my-attachment">
+        </div>
     </div>
       <div class="sample_output">
         <label for="sample_output">Sample output:</label>
         <div id="output_content" class="output_content" name="email_content_field"></div>
       </div>
       <div class="button_holder send_button">
-        <input type="submit" value="Send" />
+        <input type="submit" value="test" name="submitBtn">
+        <input type="submit" value="send" name="submitBtn"/>
       </div>
     </form>
     <script src="email_content.js"></script>
