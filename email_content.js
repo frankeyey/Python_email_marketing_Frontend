@@ -40,6 +40,7 @@ uploadDealcsv.prototype.getParsecsvdata = function(data) {
     let tempData = parsedata[1][i]
     let formatedHeader = "${" + tempHeader + "}"
 
+    csvHeader.push(tempHeader)
     csvFormatedHeader.push(formatedHeader)
     csvData.push(tempData)
     button.type = "button"
@@ -54,9 +55,25 @@ uploadDealcsv.prototype.getParsecsvdata = function(data) {
   return csvData, csvHeader, csvFormatedHeader
 };
 
+
+var catcher = document.getElementById('catcher');
+var imageInput = document.getElementById("my-image")
+var fileList = [];
+var renderFileList, sendFile;
+
+/* Send All Image when Submit */
+catcher.addEventListener('submit', function (evnt) {
+  evnt.preventDefault();
+  fileList.forEach(function (file) {
+    sendFile(file);
+  });
+});
+
 /* Method to create Image button */
-document.getElementById("my-image").addEventListener('change', function() {
+imageInput.addEventListener('change', function() {
+  fileList = [];
   for (let i = 0; i < this.files.length; i++) {
+    fileList.push(imageInput.files[i]);
     if (this.files && this.files[i]) {
       imgUrl.push(URL.createObjectURL(this.files[i])); // set src to blob url
       let button = document.createElement('input')
@@ -76,6 +93,51 @@ document.getElementById("my-image").addEventListener('change', function() {
   }
   
   return imgUrl, imgFormatedUrl
+});
+
+sendFile = function (file) {
+  var formData = new FormData();
+  var request = new XMLHttpRequest();
+
+  formData.set('file', file);
+  request.open("POST", '/sendEmails');
+  request.send(formData);
+};
+
+var zipFiles = []
+
+document.getElementById("my-custom-attachment").addEventListener('change', function() {
+  var zip = new JSZip();
+  zip.loadAsync( this.files[0] /* = file blob */)
+     .then(function(zip) {
+         // process ZIP file content here
+         zip.forEach(function(relativePath, zipEntry) {
+           zipFiles.push(zipEntry.name)
+         })
+         let upload_custom_attachment = document.getElementById("upload_custom_attachment")
+         let uploadedFile_div = document.createElement("div")
+         let uploadedFile = document.createTextNode(zipFiles[0])
+         uploadedFile_div.className = "smaller_text"
+         uploadedFile_div.appendChild(uploadedFile)
+         upload_custom_attachment.append(uploadedFile_div)
+
+         let radio_div = document.createElement("div")
+         for (let i = 0; i < csvHeader.length; i++) {  
+          let radio = document.createElement("input")
+          let radio_label = document.createElement("label")
+          let radio_text = document.createTextNode(csvHeader[i])
+          radio.type = "radio"
+          radio.id = "radio_" + csvHeader[i]
+          radio.name = "selected_header"
+          radio.value = csvHeader[i]
+          radio_label.setAttribute("for", csvHeader[i])
+          radio_label.className = "smaller_text"
+          radio_label.appendChild(radio_text)
+          radio_div.appendChild(radio)
+          radio_div.appendChild(radio_label)
+          upload_custom_attachment.append(radio_div)
+         }
+     });
 });
 
 /* Method to see the sample output */

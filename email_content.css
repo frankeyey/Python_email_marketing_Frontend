@@ -66,14 +66,6 @@
     height: 350px;
   }
   
-  .upload_csv label, .upload_image label {
-    font-size: 13px;
-  }
-
-  .attachment_upload {
-    font-size: 13px;
-  }
-  
   .output_content {
     font-size: 13px;
     background-color: white;
@@ -84,3 +76,6 @@
     margin-bottom: 20px;
   }
   
+  .smaller_text {
+    font-size: 13px;
+  }
