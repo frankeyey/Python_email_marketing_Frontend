@@ -11,7 +11,8 @@
     <div>
       <h1>Create your E-mail Template</h1>
     </div>
-    <form enctype="multipart/form-data"  class="card container" action="/sendEmails" method="POST">
+    <form enctype="multipart/form-data" class="card container"
+      action="/sendEmails" method="POST">
       <div class="email_subject">
         <label for="email_subject">E-mail Subject:</label>
         <input type="text" name="subject_field" />
@@ -19,9 +20,10 @@
       <div class="email_content">
         <label for="email_content">E-mail Content:</label>
         <span class="see_output_btn">
-          <input type="button" id="input_content_btn" value="See output" onclick="seeOutput(); this.blur()"/>
+          <input type="button" id="input_content_btn" value="See output"
+            onclick="seeOutput(); this.blur()" />
         </span>
-        <textarea id="input_content"></textarea>
+        <textarea name="content_field" id="input_content"></textarea>
         <div id="varFromCsv" class="var_from_csv"></div>
         <div class="upload_csv">
           <label>.csv file:</label>
@@ -33,17 +35,18 @@
           <img>
         </div>
         <div>
-            <label class="attachment_upload">attachemnt:</label>
-            <input name="attachment" accept=".zip" type="file" id="my-attachment">
+          <label class="attachment_upload">attachemnt:</label>
+          <input name="attachment" accept=".zip" type="file" id="my-attachment">
         </div>
-    </div>
+      </div>
       <div class="sample_output">
         <label for="sample_output">Sample output:</label>
-        <div id="output_content" class="output_content" name="email_content_field"></div>
+        <div id="output_content" class="output_content"
+          name="email_content_field"></div>
       </div>
       <div class="button_holder send_button">
         <input type="submit" value="test" name="submitBtn">
-        <input type="submit" value="send" name="submitBtn"/>
+        <input type="submit" value="send" name="submitBtn" />
       </div>
     </form>
     <script src="email_content.js"></script>
