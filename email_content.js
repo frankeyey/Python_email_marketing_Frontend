@@ -104,40 +104,25 @@ sendFile = function (file) {
   request.send(formData);
 };
 
-var zipFiles = []
-
 document.getElementById("my-custom-attachment").addEventListener('change', function() {
-  var zip = new JSZip();
-  zip.loadAsync( this.files[0] /* = file blob */)
-     .then(function(zip) {
-         // process ZIP file content here
-         zip.forEach(function(relativePath, zipEntry) {
-           zipFiles.push(zipEntry.name)
-         })
-         let upload_custom_attachment = document.getElementById("upload_custom_attachment")
-         let uploadedFile_div = document.createElement("div")
-         let uploadedFile = document.createTextNode(zipFiles[0])
-         uploadedFile_div.className = "smaller_text"
-         uploadedFile_div.appendChild(uploadedFile)
-         upload_custom_attachment.append(uploadedFile_div)
+  let upload_custom_attachment = document.getElementById("upload_custom_attachment")
 
-         let radio_div = document.createElement("div")
-         for (let i = 0; i < csvHeader.length; i++) {  
-          let radio = document.createElement("input")
-          let radio_label = document.createElement("label")
-          let radio_text = document.createTextNode(csvHeader[i])
-          radio.type = "radio"
-          radio.id = "radio_" + csvHeader[i]
-          radio.name = "selected_header"
-          radio.value = csvHeader[i]
-          radio_label.setAttribute("for", csvHeader[i])
-          radio_label.className = "smaller_text"
-          radio_label.appendChild(radio_text)
-          radio_div.appendChild(radio)
-          radio_div.appendChild(radio_label)
-          upload_custom_attachment.append(radio_div)
-         }
-     });
+  let radio_div = document.createElement("div")
+  for (let i = 0; i < csvHeader.length; i++) {  
+    let radio = document.createElement("input")
+    let radio_label = document.createElement("label")
+    let radio_text = document.createTextNode(csvHeader[i])
+    radio.type = "radio"
+    radio.id = "radio_" + csvHeader[i]
+    radio.name = "selected_header"
+    radio.value = csvHeader[i]
+    radio_label.setAttribute("for", csvHeader[i])
+    radio_label.className = "smaller_text"
+    radio_label.appendChild(radio_text)
+    radio_div.appendChild(radio)
+    radio_div.appendChild(radio_label)
+    upload_custom_attachment.append(radio_div)
+  }
 });
 
 /* Method to see the sample output */
