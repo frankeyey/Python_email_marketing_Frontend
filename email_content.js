@@ -38,7 +38,9 @@ uploadDealcsv.prototype.getParsecsvdata = function(data) {
     let button = document.createElement('input')
     let tempHeader = parsedata[0][i]
     let tempData = parsedata[1][i]
+    console.log(tempHeader)
     let formatedHeader = "${" + tempHeader + "}"
+    console.log(formatedHeader)
 
     csvHeader.push(tempHeader)
     csvFormatedHeader.push(formatedHeader)
@@ -46,63 +48,75 @@ uploadDealcsv.prototype.getParsecsvdata = function(data) {
     button.type = "button"
     button.id = i
     button.value = tempHeader
+    formatedHeader = formatedHeader.replace("\n","")
     button.onclick = function() {
-      document.getElementById("input_content").value += formatedHeader
-      getBackToInput()
+      insertAtCaret("input_content",formatedHeader)
     }
     document.getElementById("varFromCsv").append(button)
   }
   return csvData, csvHeader, csvFormatedHeader
 };
 
-
-// var catcher = document.getElementById('catcher');
-
-// var fileList = [];
-// var renderFileList, sendFile;
-
-// /* Send All Image when Submit */
-// catcher.addEventListener('submit', function (evnt) {
-//   evnt.preventDefault();
-//   fileList.forEach(function (file) {
-//     sendFile(file);
-//   });
-// });
 var imageInput = document.getElementById("my-image")
+var mediaList = [];
 
 /* Method to create Image button */
 imageInput.addEventListener('change', function() {
-  let fileList = [];
   for (let i = 0; i < this.files.length; i++) {
-    fileList.push(this.files[i]);
-    if (this.files && this.files[i]) {
+    if (this.files && this.files[i].name) {
       imgUrl.push(URL.createObjectURL(this.files[i])); // set src to blob url
       let button = document.createElement('input')
       let imgName = this.files[i].name
       let formatedImageTag= "${[" + imgName + "]}"
 
+      mediaList.push(this.files[i]);
       imgFormatedUrl.push(formatedImageTag)
       button.type = "button"
       button.id = imgName
       button.value = imgName
       button.onclick = function() {
-        document.getElementById("input_content").value += formatedImageTag
-        getBackToInput()
+        insertAtCaret("input_content",formatedImageTag)
       }
       document.getElementById("varFromCsv").append(button)
     }
   }
-  return imgUrl, imgFormatedUrl
+  return imgUrl, imgFormatedUrl, mediaList
 });
 
-// sendFile = function (file) {
-//   var formData = new FormData();
-//   var request = new XMLHttpRequest();
+var catcher = document.getElementById('catcher');
 
-//   formData.set('file', file);
-//   request.open("POST", '/sendEmails');
-//   request.send(formData);
-// };
+/* Send All Image when Submit */
+catcher.addEventListener('submit', function (evnt) {
+  evnt.preventDefault();
+  var formData = new FormData();
+  var request = new XMLHttpRequest();
+
+  let subject_field = document.getElementById("subject_field").value
+  let content_field = document.getElementById("input_content").value
+  let targets_csv = document.getElementById("dealCsv").files[0]
+  let custom_attachment = document.getElementById("my-custom-attachment").files[0]
+  let selected_header = document.querySelector('input[name="selected_header"]:checked').value;
+  let submitBtn = document.getElementById("testBtn").value
+
+  formData.append('subject_field', subject_field)
+  formData.append('content_field', content_field)
+  formData.append('targets_csv', targets_csv)
+  formData.append('custom-attachment', custom_attachment)
+  formData.append('selected_header', selected_header)
+  formData.append('submitBtn', submitBtn)
+  mediaList.forEach(function (file) {
+    formData.append('media', file)
+  });
+  request.open("POST", '/sendEmails');
+  request.send(formData);
+});
+
+document.getElementById("my-attachment").addEventListener('change', function() {
+  for (let i = 0; i < this.files.length; i++) {
+    mediaList.push(this.files[i])
+  }
+  return mediaList
+})
 
 document.getElementById("my-custom-attachment").addEventListener('change', function() {
   let upload_custom_attachment = document.getElementById("upload_custom_attachment")
@@ -157,17 +171,36 @@ function getBackToInput() {
 var parseCsv = new uploadDealcsv();
 parseCsv.getCsv();
 
-function insertAtCursor(input, textToInsert) {
-  // get current text of the input
-  const value = input.value;
+function insertAtCaret(areaId,text) {
+  var txtarea = document.getElementById(areaId);
+  var scrollPos = txtarea.scrollTop;
+  var strPos = 0;
+  var br = ((txtarea.selectionStart || txtarea.selectionStart == '0') ? 
+    "ff" : (document.selection ? "ie" : false ) );
+  if (br == "ie") { 
+    txtarea.focus();
+    var range = document.selection.createRange();
+    range.moveStart ('character', -txtarea.value.length);
+    strPos = range.text.length;
+  }
+  else if (br == "ff") strPos = txtarea.selectionStart;
 
-  // save selection start and end position
-  const start = input.selectionStart;
-  const end = input.selectionEnd;
-
-  // update the value with our text inserted
-  input.value = value.slice(0, start) + textToInsert + value.slice(end);
-
-  // update cursor to be at the end of insertion
-  input.selectionStart = input.selectionEnd = start + textToInsert.length;
+  var front = (txtarea.value).substring(0,strPos);  
+  var back = (txtarea.value).substring(strPos,txtarea.value.length); 
+  txtarea.value=front+text+back;
+  strPos = strPos + text.length;
+  if (br == "ie") { 
+    txtarea.focus();
+    var range = document.selection.createRange();
+    range.moveStart ('character', -txtarea.value.length);
+    range.moveStart ('character', strPos);
+    range.moveEnd ('character', 0);
+    range.select();
+  }
+  else if (br == "ff") {
+    txtarea.selectionStart = strPos;
+    txtarea.selectionEnd = strPos;
+    txtarea.focus();
+  }
+  txtarea.scrollTop = scrollPos;
 }
