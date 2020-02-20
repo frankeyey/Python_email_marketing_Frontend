@@ -56,24 +56,25 @@ uploadDealcsv.prototype.getParsecsvdata = function(data) {
 };
 
 
-var catcher = document.getElementById('catcher');
-var imageInput = document.getElementById("my-image")
-var fileList = [];
-var renderFileList, sendFile;
+// var catcher = document.getElementById('catcher');
 
-/* Send All Image when Submit */
-catcher.addEventListener('submit', function (evnt) {
-  evnt.preventDefault();
-  fileList.forEach(function (file) {
-    sendFile(file);
-  });
-});
+// var fileList = [];
+// var renderFileList, sendFile;
+
+// /* Send All Image when Submit */
+// catcher.addEventListener('submit', function (evnt) {
+//   evnt.preventDefault();
+//   fileList.forEach(function (file) {
+//     sendFile(file);
+//   });
+// });
+var imageInput = document.getElementById("my-image")
 
 /* Method to create Image button */
 imageInput.addEventListener('change', function() {
-  fileList = [];
+  let fileList = [];
   for (let i = 0; i < this.files.length; i++) {
-    fileList.push(imageInput.files[i]);
+    fileList.push(this.files[i]);
     if (this.files && this.files[i]) {
       imgUrl.push(URL.createObjectURL(this.files[i])); // set src to blob url
       let button = document.createElement('input')
@@ -91,22 +92,20 @@ imageInput.addEventListener('change', function() {
       document.getElementById("varFromCsv").append(button)
     }
   }
-  
   return imgUrl, imgFormatedUrl
 });
 
-sendFile = function (file) {
-  var formData = new FormData();
-  var request = new XMLHttpRequest();
+// sendFile = function (file) {
+//   var formData = new FormData();
+//   var request = new XMLHttpRequest();
 
-  formData.set('file', file);
-  request.open("POST", '/sendEmails');
-  request.send(formData);
-};
+//   formData.set('file', file);
+//   request.open("POST", '/sendEmails');
+//   request.send(formData);
+// };
 
 document.getElementById("my-custom-attachment").addEventListener('change', function() {
   let upload_custom_attachment = document.getElementById("upload_custom_attachment")
-
   let radio_div = document.createElement("div")
   for (let i = 0; i < csvHeader.length; i++) {  
     let radio = document.createElement("input")
