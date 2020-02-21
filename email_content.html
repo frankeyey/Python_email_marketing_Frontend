@@ -15,13 +15,13 @@
       action="/sendEmails" method="POST" id="catcher">
       <div class="email_subject">
         <label for="email_subject">E-mail Subject:</label>
-        <input type="text" name="subject_field" id="subject_field"/>
+        <input type="text" name="subject_field" id="subject_field" autofocus required/>
       </div>
       <div class="email_content">
         <label for="email_content">E-mail Content:</label>
         <span class="see_output_btn">
           <input type="button" id="input_content_btn" value="See output"
-            onclick="seeOutput(); this.blur()" />
+            onclick="seeOutput(); this.blur()" required/>
         </span>
         <textarea name="content_field" id="input_content"></textarea>
         <div id="varFromCsv" class="var_from_csv"></div>

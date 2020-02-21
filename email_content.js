@@ -37,9 +37,9 @@ uploadDealcsv.prototype.getParsecsvdata = function(data) {
     let button = document.createElement("input");
     let tempHeader = parsedata[0][i];
     let tempData = parsedata[1][i];
-    console.log(tempHeader);
+    tempHeader = tempHeader.split("\r").join("")
+    tempHeader = tempHeader.split("\n").join("")
     let formatedHeader = "${" + tempHeader + "}";
-    console.log(formatedHeader);
 
     csvHeader.push(tempHeader);
     csvFormatedHeader.push(formatedHeader);
@@ -47,7 +47,6 @@ uploadDealcsv.prototype.getParsecsvdata = function(data) {
     button.type = "button";
     button.id = i;
     button.value = tempHeader;
-    formatedHeader = formatedHeader.replace("\n", "");
     button.onclick = function() {
       insertAtCaret("input_content", formatedHeader);
     };
@@ -56,31 +55,36 @@ uploadDealcsv.prototype.getParsecsvdata = function(data) {
   return csvData, csvHeader, csvFormatedHeader;
 };
 
-var imageInput = document.getElementById("my-image");
+
 var mediaList = [];
 
-/* Method to create Image button */
-imageInput.addEventListener("change", function() {
-  for (let i = 0; i < this.files.length; i++) {
-    if (this.files && this.files[i].name) {
-      imgUrl.push(URL.createObjectURL(this.files[i])); // set src to blob url
-      let button = document.createElement("input");
-      let imgName = this.files[i].name;
-      let formatedImageTag = "${[" + imgName + "]}";
+function uploadDealImg() {}
 
-      mediaList.push(this.files[i]);
-      imgFormatedUrl.push(formatedImageTag);
-      button.type = "button";
-      button.id = imgName;
-      button.value = imgName;
-      button.onclick = function() {
-        insertAtCaret("input_content", formatedImageTag);
-      };
-      document.getElementById("varFromCsv").append(button);
+uploadDealImg.prototype.createImgBtn = function() {
+  let imageInput = document.getElementById("my-image");
+  /* Method to create Image button */
+  imageInput.addEventListener("change", function() {
+    for (let i = 0; i < this.files.length; i++) {
+      if (this.files && this.files[i].name) {
+        imgUrl.push(URL.createObjectURL(this.files[i])); // set src to blob url
+        let button = document.createElement("input");
+        let imgName = this.files[i].name;
+        let formatedImageTag = "${[" + imgName + "]}";
+
+        mediaList.push(this.files[i]);
+        imgFormatedUrl.push(formatedImageTag);
+        button.type = "button";
+        button.id = imgName;
+        button.value = imgName;
+        button.onclick = function() {
+          insertAtCaret("input_content", formatedImageTag);
+        };
+        document.getElementById("varFromCsv").append(button);
+      }
     }
-  }
-  return imgUrl, imgFormatedUrl, mediaList;
-});
+    return imgUrl, imgFormatedUrl, mediaList;
+  });
+}
 
 var catcher = document.getElementById("catcher");
 
