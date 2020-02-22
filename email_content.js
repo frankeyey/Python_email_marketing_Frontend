@@ -1,99 +1,11 @@
-let csvHeader = [];
-let csvData = [];
-let csvFormatedHeader = [];
-let imgUrl = [];
-let imgFormatedUrl = [];
-
-function uploadDealcsv() {}
-/* Method for read uploded csv file */
-uploadDealcsv.prototype.getCsv = function(e) {
-  let input = document.getElementById("dealCsv");
-  input.addEventListener("change", function() {
-    if (this.files && this.files[0]) {
-      var myFile = this.files[0];
-      var reader = new FileReader();
-
-      reader.addEventListener("load", function(e) {
-        let csvdata = e.target.result;
-        parseCsv.getParsecsvdata(csvdata); // calling function for parse csv data
-      });
-
-      reader.readAsBinaryString(myFile);
-    }
-  });
-};
-
-/* Method for parse csv data and create button */
-uploadDealcsv.prototype.getParsecsvdata = function(data) {
-  let parsedata = [];
-
-  let newLinebrk = data.split("\n");
-  for (let i = 0; i < newLinebrk.length; i++) {
-    parsedata.push(newLinebrk[i].split(","));
-  }
-
-  /* Generate button based on parsedata */
-  for (let i = 0; i < parsedata[0].length; i++) {
-    let button = document.createElement("input");
-    let tempHeader = parsedata[0][i];
-    let tempData = parsedata[1][i];
-    tempHeader = tempHeader.split("\r").join("")
-    tempHeader = tempHeader.split("\n").join("")
-    let formatedHeader = "${" + tempHeader + "}";
-
-    csvHeader.push(tempHeader);
-    csvFormatedHeader.push(formatedHeader);
-    csvData.push(tempData);
-    button.type = "button";
-    button.id = i;
-    button.value = tempHeader;
-    button.onclick = function() {
-      insertAtCaret("input_content", formatedHeader);
-    };
-    document.getElementById("varFromCsv").append(button);
-  }
-  return csvData, csvHeader, csvFormatedHeader;
-};
-
-
-var mediaList = [];
-
-function uploadDealImg() {}
-
-uploadDealImg.prototype.createImgBtn = function() {
-  let imageInput = document.getElementById("my-image");
-  /* Method to create Image button */
-  imageInput.addEventListener("change", function() {
-    for (let i = 0; i < this.files.length; i++) {
-      if (this.files && this.files[i].name) {
-        imgUrl.push(URL.createObjectURL(this.files[i])); // set src to blob url
-        let button = document.createElement("input");
-        let imgName = this.files[i].name;
-        let formatedImageTag = "${[" + imgName + "]}";
-
-        mediaList.push(this.files[i]);
-        imgFormatedUrl.push(formatedImageTag);
-        button.type = "button";
-        button.id = imgName;
-        button.value = imgName;
-        button.onclick = function() {
-          insertAtCaret("input_content", formatedImageTag);
-        };
-        document.getElementById("varFromCsv").append(button);
-      }
-    }
-    return imgUrl, imgFormatedUrl, mediaList;
-  });
-}
-
 var catcher = document.getElementById("catcher");
 
-/* Send All Image when Submit */
+/* Hijack form data, use AJAX to send */
 catcher.addEventListener("submit", function(evnt) {
   evnt.preventDefault();
   var formData = new FormData();
-  var request = new XMLHttpRequest();
-
+  let config =  new Config()
+  let requests = new XMLHttpRequest();
   let subject_field = document.getElementById("subject_field").value;
   let content_field = document.getElementById("input_content").value;
   let targets_csv = document.getElementById("dealCsv").files[0];
@@ -110,9 +22,11 @@ catcher.addEventListener("submit", function(evnt) {
   formData.append("custom-attachment", custom_attachment);
   formData.append("selected_header", selected_header);
   formData.append("submitBtn", submitBtn);
-  mediaList.forEach(function(file) {
+  config.mediaList.forEach(function(file) {
     formData.append("media", file);
   });
+
+
   request.open("POST", "/sendEmails");
 
   request.onload = res => {
@@ -122,41 +36,14 @@ catcher.addEventListener("submit", function(evnt) {
   };
 
   request.send(formData);
+
 });
 
-document.getElementById("my-attachment").addEventListener("change", function() {
-  for (let i = 0; i < this.files.length; i++) {
-    mediaList.push(this.files[i]);
-  }
-  return mediaList;
-});
 
-document
-  .getElementById("my-custom-attachment")
-  .addEventListener("change", function() {
-    let upload_custom_attachment = document.getElementById(
-      "upload_custom_attachment"
-    );
-    let radio_div = document.createElement("div");
-    for (let i = 0; i < csvHeader.length; i++) {
-      let radio = document.createElement("input");
-      let radio_label = document.createElement("label");
-      let radio_text = document.createTextNode(csvHeader[i]);
-      radio.type = "radio";
-      radio.id = "radio_" + csvHeader[i];
-      radio.name = "selected_header";
-      radio.value = csvHeader[i];
-      radio_label.setAttribute("for", csvHeader[i]);
-      radio_label.className = "smaller_text";
-      radio_label.appendChild(radio_text);
-      radio_div.appendChild(radio);
-      radio_div.appendChild(radio_label);
-      upload_custom_attachment.append(radio_div);
-    }
-  });
 
 /* Method to see the sample output */
 function seeOutput() {
+  let config = new Config()
   let output = document.getElementById("output_content");
   let input = document
     .getElementById("input_content")
@@ -164,19 +51,19 @@ function seeOutput() {
     .join("<br>");
   output.style.display = "block";
 
-  for (let i = 0; i < csvFormatedHeader.length; i++) {
+  for (let i = 0; i < config.csvFormatedHeader.length; i++) {
     //Replace each ${} with respective sample data
-    var searchString = input.search(csvFormatedHeader[i]); //Check if any ${} exist
-    var changeVariable = input.split(csvFormatedHeader[i]).join(csvData[i]);
+    var searchString = input.search(config.csvFormatedHeader[i]); //Check if any ${} exist
+    var changeVariable = input.split(config.csvFormatedHeader[i]).join(config.csvData[i]);
     input = changeVariable;
   }
 
-  for (let i = 0; i < imgFormatedUrl.length; i++) {
+  for (let i = 0; i < config.imgFormatedUrl.length; i++) {
     //Replace each ${} with respective sample data
-    var searchImage = input.search(imgFormatedUrl[i]); //Check if any ${} exist
+    var searchImage = input.search(config.imgFormatedUrl[i]); //Check if any ${} exist
     var changeVariable = input
-      .split(imgFormatedUrl[i])
-      .join("<img src=" + imgUrl[i] + " style='max-width: 100%'>");
+      .split(config.imgFormatedUrl[i])
+      .join("<img src=" + config.imgUrl[i] + " style='max-width: 100%'>");
     input = changeVariable;
   }
 
@@ -185,48 +72,9 @@ function seeOutput() {
   } else {
     output.innerHTML = input;
   }
-  getBackToInput();
-}
-
-function getBackToInput() {
+  
+  // change status to focus for input content
   document.getElementById("input_content").focus();
 }
 
-var parseCsv = new uploadDealcsv();
-parseCsv.getCsv();
-
-function insertAtCaret(areaId, text) {
-  var txtarea = document.getElementById(areaId);
-  var scrollPos = txtarea.scrollTop;
-  var strPos = 0;
-  var br =
-    txtarea.selectionStart || txtarea.selectionStart == "0"
-      ? "ff"
-      : document.selection
-      ? "ie"
-      : false;
-  if (br == "ie") {
-    txtarea.focus();
-    var range = document.selection.createRange();
-    range.moveStart("character", -txtarea.value.length);
-    strPos = range.text.length;
-  } else if (br == "ff") strPos = txtarea.selectionStart;
-
-  var front = txtarea.value.substring(0, strPos);
-  var back = txtarea.value.substring(strPos, txtarea.value.length);
-  txtarea.value = front + text + back;
-  strPos = strPos + text.length;
-  if (br == "ie") {
-    txtarea.focus();
-    var range = document.selection.createRange();
-    range.moveStart("character", -txtarea.value.length);
-    range.moveStart("character", strPos);
-    range.moveEnd("character", 0);
-    range.select();
-  } else if (br == "ff") {
-    txtarea.selectionStart = strPos;
-    txtarea.selectionEnd = strPos;
-    txtarea.focus();
-  }
-  txtarea.scrollTop = scrollPos;
-}
+new UploadCsv()
