@@ -43,6 +43,7 @@ class UploadCsv {
             button.value = tempHeader;
             button.onclick = function() {
             insertAtCaret("input_content", formatedHeader);
+            seeOutput()
             };
             document.getElementById("varFromCsv").append(button);
         }

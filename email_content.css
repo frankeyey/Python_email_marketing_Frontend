@@ -38,11 +38,7 @@
     padding: 0;
   }
   
-  .see_output_btn {
-    float: right;
-  }
-  
-  .see_output_btn input, input[type="button"]{
+  input[type="button"]{
     background-color: rgb(76, 102, 175);
     color: white;
     padding: 6px;
@@ -52,7 +48,7 @@
     font-size: 12px;
   }
   
-  .see_output_btn input:hover,input[type="button"]:hover {
+  input[type="button"]:hover {
     background-color: rgb(143, 148, 218);
   }
   

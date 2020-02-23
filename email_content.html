@@ -19,11 +19,7 @@
       </div>
       <div class="email_content">
         <label for="email_content">E-mail Content:</label>
-        <span class="see_output_btn">
-          <input type="button" id="input_content_btn" value="See output"
-            onclick="seeOutput(); this.blur()" required/>
-        </span>
-        <textarea name="content_field" id="input_content"></textarea>
+        <textarea name="content_field" id="input_content" oninput="seeOutput()"></textarea>
         <div id="varFromCsv" class="var_from_csv"></div>
         <div class="upload_csv">
           <label class="smaller_text">.csv file:</label>

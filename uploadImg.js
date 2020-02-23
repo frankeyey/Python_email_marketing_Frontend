@@ -19,6 +19,7 @@ function uploadImg() {
         button.value = imgName;
         button.onclick = function() {
             insertAtCaret("input_content", formatedImageTag);
+            seeOutput()
         };
         document.getElementById("varFromCsv").append(button);
         }

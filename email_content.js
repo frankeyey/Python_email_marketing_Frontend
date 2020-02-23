@@ -39,8 +39,6 @@ catcher.addEventListener("submit", function(evnt) {
 
 });
 
-
-
 /* Method to see the sample output */
 function seeOutput() {
   let config = new Config()
