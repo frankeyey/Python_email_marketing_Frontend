@@ -5,7 +5,7 @@ catcher.addEventListener("submit", function(evnt) {
   evnt.preventDefault();
   var formData = new FormData();
   let config =  new Config()
-  let requests = new XMLHttpRequest();
+  let request = new XMLHttpRequest();
   let subject_field = document.getElementById("subject_field").value;
   let content_field = document.getElementById("input_content").value;
   let targets_csv = document.getElementById("dealCsv").files[0];
