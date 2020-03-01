@@ -2,9 +2,10 @@ var catcher = document.getElementById("catcher");
 
 /* Hijack form data, use AJAX to send */
 catcher.addEventListener("submit", function(evnt) {
+  showLoader();
   evnt.preventDefault();
   var formData = new FormData();
-  let config =  new Config()
+  let config = new Config();
   let request = new XMLHttpRequest();
   let subject_field = document.getElementById("subject_field").value;
   let content_field = document.getElementById("input_content").value;
@@ -26,22 +27,22 @@ catcher.addEventListener("submit", function(evnt) {
     formData.append("media", file);
   });
 
-
   request.open("POST", "/sendEmails");
 
   request.onload = res => {
     if (res.target.status == 200) {
-      alert("All email sent!");
+      alert("All emails sent");
+      catcher.reset();
+      location.reload();
     }
   };
 
   request.send(formData);
-
 });
 
 /* Method to see the sample output */
 function seeOutput() {
-  let config = new Config()
+  let config = new Config();
   let output = document.getElementById("output_content");
   let input = document
     .getElementById("input_content")
@@ -52,7 +53,9 @@ function seeOutput() {
   for (let i = 0; i < config.csvFormatedHeader.length; i++) {
     //Replace each ${} with respective sample data
     var searchString = input.search(config.csvFormatedHeader[i]); //Check if any ${} exist
-    var changeVariable = input.split(config.csvFormatedHeader[i]).join(config.csvData[i]);
+    var changeVariable = input
+      .split(config.csvFormatedHeader[i])
+      .join(config.csvData[i]);
     input = changeVariable;
   }
 
@@ -70,9 +73,9 @@ function seeOutput() {
   } else {
     output.innerHTML = input;
   }
-  
+
   // change status to focus for input content
   document.getElementById("input_content").focus();
 }
 
-new UploadCsv()
+new UploadCsv();
