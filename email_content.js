@@ -4,6 +4,8 @@ var catcher = document.getElementById("catcher");
 catcher.addEventListener("submit", function(evnt) {
   showLoader();
   evnt.preventDefault();
+  console.log("Got");
+
   var formData = new FormData();
   let config = new Config();
   let request = new XMLHttpRequest();
@@ -12,9 +14,14 @@ catcher.addEventListener("submit", function(evnt) {
   let targets_csv = document.getElementById("dealCsv").files[0];
   let custom_attachment = document.getElementById("my-custom-attachment")
     .files[0];
-  let selected_header = document.querySelector(
-    'input[name="selected_header"]:checked'
-  ).value;
+  if (document.forms["Form"]["selected_header"] != undefined) {
+    var selected_header = document.querySelector(
+      'input[name="selected_header"]:checked'
+    ).value;
+  } else {
+    var selected_header = "";
+  }
+
   let submitBtn = document.getElementById("testBtn").value;
 
   formData.append("subject_field", subject_field);
@@ -26,7 +33,7 @@ catcher.addEventListener("submit", function(evnt) {
   config.mediaList.forEach(function(file) {
     formData.append("media", file);
   });
-
+  console.log("Send");
   request.open("POST", "/sendEmails");
 
   request.onload = res => {
